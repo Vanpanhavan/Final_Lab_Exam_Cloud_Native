@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+       type: poc
+       app: api-gateway
+  template:
+      metadata:
+        labels:
+          release: beta
+          type: poc
+          app: api-gateway
+        name: api-gateway-pod
+      spec:
+        containers:
+          - image: "panhavan/api_micro:v1.0"
+            name: api-micro-container
+            ports:
+              - containerPort: 4000
+          - image: "panhavan/reg_micro:v1.0"
+            name: reg-micro-container
+            ports:
+              - containerPort: 5001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mocro-services-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+       type: poc
+       app: micro-services
+  template:
+      metadata:
+        labels:
+          release: beta
+          type: poc
+          app: micro-services
+        name: mocro-services-pod
+      spec:
+        containers:
+          - image: "panhavan/auth_micro:v1.0"
+            name: auth-micro-container
+            ports:
+              - containerPort: 5002
+
